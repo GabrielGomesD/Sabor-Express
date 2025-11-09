@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+{% block content %}
+<div claçãow g-3">
+  <div claçãol-12 col-xl-3">
+    <div class="card p-3">
+      <h5 class="mb-3"><i class="bi bi-shop"></i> Restaurante</h5>
+      <form id="opt-form" method="post" açãoptimize">
+        <div class="mb-2">
+          <label claçãome</label>
+          <input claçãol" name="restaurant_name" id="restaurant_name" value="{{ default_name }}" />
+        </div>
+        <div claçãow g-2">
+          <div claçãol-6">
+            <label claçãorm-label">Latitude</label>
+            <input claçãol" name="restaurant_lat" id="restaurant_lat" value="{{ default_lat }}" />
+          </div>
+          <div claçãol-6">
+            <label claçãongitude</label>
+            <input claçãol" naçãon" id="restaçãon" value="{{ defaçãon }}" />
+          </div>
+        </div>
+        <div class="mt-2">
+          <label claçãocidade (km/h)</label>
+          <input claçãol" name="speed" id="speed" value="{{ default_speed }}" />
+        </div>
+        <div claçãorm-check mt-2">
+          <input claçãorm-check-input" type="checkbox" naçãoads" id="roads" checked>
+          <label claçãorm-check-label" for="roads">Traçaçãota pelas ruaçãoSRM)</label>
+        </div>
+        <input type="hidden" name="csv_text" id="csv_text" />
+        <div class="mt-3 d-grid gap-2">
+          <button class="btn btn-primary" type="submit" id="btn-run"><i class="bi bi-rocket-takeoff"></i> Calculaçãor rotaçãon>
+          <button class="btn btn-outline-secondary" type="button" id="btn-download"><i class="bi bi-file-eaçãown"></i> Baixar CSV açãon>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div claçãol-12 col-xl-9">
+    <div class="card p-3">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <h5 class="m-0"><i class="bi bi-geo-alt"></i> Pontos de Entrega</h5>
+        <div class="d-flex gap-2">
+          <button class="btn btn-success" id="btn-add"><i class="bi bi-plus-circle"></i> açãon>
+        </div>
+      </div>
+      <div claçãonsive">
+        <table class="table table-striped align-middle" id="points-table">
+          <thead>
+            <tr>
+              <th>id</th>
+              <th>nome</th>
+              <th>endereco</th>
+              <th>latitude</th>
+              <th>longitude</th>
+              <th>selecionado</th>
+              <th style="width:140px;">ação</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div claçãodal fade" id="editModal" tabindex="-1" aria-hidden="true">
+  <div claçãog modal-lg modaçãog-centered">
+    <div claçãontent">
+      <div claçãodal-header">
+        <h5 claçãodal-title"><i class="bi bi-pencil-square"></i> Editação</h5>
+        <button type="button" claçãose" daçãodal" açãon>
+      </div>
+      <div claçãody">
+        <div claçãow g-2">
+          <div claçãol-2">
+            <label claçãorm-label">id</label>
+            <input claçãol" id="f_id" />
+          </div>
+          <div claçãol-4">
+            <label claçãome</label>
+            <input claçãol" id="f_nome" />
+          </div>
+          <div claçãol-6">
+            <label clação</label>
+            <input claçãol" id="f_endereco" />
+          </div>
+          <div claçãol-6">
+            <label claçãorm-label">latitude</label>
+            <input claçãol" id="f_latitude" />
+          </div>
+          <div claçãol-6">
+            <label claçãongitude</label>
+            <input claçãol" id="f_longitude" />
+          </div>
+          <div claçãol-12">
+            <div claçãorm-check mt-2">
+              <input claçãorm-check-input" type="checkbox" id="f_selecionado" />
+              <label claçãorm-check-label" for="f_selecionação</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div claçãoter">
+        <button type="button" class="btn btn-danger me-auto" id="btn-delete"><i class="bi bi-trash"></i> Excluir</button>
+        <button type="button" class="btn btn-secondary" daçãon>
+        <button type="button" class="btn btn-primary" id="btn-saçãon>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const CaçãoLS = ["id","nome","endereco","lação"]; 
+  let rows = {{ rows | tojson }};
+  let editingIndex = -1;
+
+  function renderTable() {
+    const tbody = document.getElementById('tbody');
+    tbody.innerHTML = '';
+    rows.forEach((r, idx) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${r.id ?? ''}</td>
+        <td>${escaçãome ?? '')}</td>
+        <td>${escação ?? '')}</td>
+        <td>${r.latitude ?? ''}</td>
+        <td>${r.longitude ?? ''}</td>
+        <td>
+          <div claçãorm-check form-switch">
+            <input claçãorm-check-input" type="checkbox" ${r.selecionado ? 'checked' : ''} data-idx="${idx}" onchaçãoggleSelected(this)">
+          </div>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-outline-secondary me-1" onclick="openEdit(${idx})"><i class="bi bi-pencil"></i> Editaçãon>
+          <button class="btn btn-sm btn-danger" onclick="deleteRow(${idx})"><i class="bi bi-traçãon>
+        </td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function escapeHtml(str) { return String(str).replace(/[&<>"]/g, s => ({'&':'&açãot;'}[s])); }
+
+  function openEdit(idx) {
+    editingIndex = idx;
+    const r = rows[idx];
+    document.getElementById('f_id').value = r.id ?? '';
+    document.getElementById('f_nome').value = r.nome ?? '';
+    document.getElementById('f_endereco').value = r.endereco ?? '';
+    document.getElementById('f_latitude').value = r.latitude ?? '';
+    document.getElementById('f_longitude').value = r.longitude ?? '';
+    document.getElementById('f_selecionado').checked = !!r.selecionado;
+    const modal = bootstraçãodal'));
+    modaçãow();
+  }
+
+  function openAdd() {
+    editingIndex = -1;
+    document.getElementById('f_id').value = '';
+    document.getElementById('f_nome').value = '';
+    document.getElementById('f_endereco').value = '';
+    document.getElementById('f_latitude').value = '';
+    document.getElementById('f_longitude').value = '';
+    document.getElementById('f_selecionado').checked = true;
+    const modal = bootstraçãodal'));
+    modaçãow();
+  }
+
+  function saveEdit() {
+    const r = {
+      id: intOrNull(document.getElementById('f_id').value),
+      nome: document.getElementById('f_nome').value.trim(),
+      endereco: document.getElementById('f_endereco').value.trim(),
+      latitude: floaçãocument.getElementById('f_latitude').value),
+      longitude: floaçãongitude').value),
+      selecionado: document.getElementById('f_selecionado').checked,
+    };
+    if (editingIndex === -1) rows.push(r); else rows[editingIndex] = r;
+    bootstraçãodal')).hide();
+    renderTable();
+  }
+
+  function deleteRow(idx) {
+    rows.splice(idx, 1);
+    renderTable();
+  }
+
+  function toggleSelected(el) {
+    const idx = parseInt(el.getAttribute('data-idx'));
+    rows[idx].selecionado = el.checked;
+  }
+
+  function intOrNull(v){ const n = parseInt(v, 10); return isNaN(n) ? null : n; }
+  function floatOrNull(v){ const n = paçãoat(v); return isNaN(n) ? null : n; }
+
+  function rowsToCsv() {
+    const headers = CaçãoLS;
+    const lines = [heaçãoin(',')];
+    rows.forEach(r => {
+      const vals = headers.map(h => {
+        let v = r[h];
+        if (v === null || v === undefined) v = '';
+        if (typeof v === 'string' && (v.includes(',') || v.includes('"'))) {
+          v = '"' + v.replaceAll('"','""') + '"';
+        }
+        return v;
+      });
+      lines.push(vaçãoin(','));
+    });
+    return lines.join('\n');
+  }
+
+  document.getElementById('btn-add').addEventListener('click', openAdd);
+  document.getElementById('btn-save').addEventListener('click', saveEdit);
+  document.getElementById('btn-delete').addEventListener('click', () => {
+    if (editingIndex >= 0) { deleteRow(editingIndex); }
+    bootstraçãodal')).hide();
+  });
+
+  document.getElementById('opt-form').addEventListener('submit', (e) => {
+    document.getElementById('csv_text').value = rowsToCsv();
+  });
+
+  document.getElementById('btn-download').addEventListener('click', () => {
+    const csv = rowsToCsv();
+    const blob = new Blob([csv], {type:'text/csv'});
+    const a = document.createElement('a');
+    a.href = URL.creaçãob);
+    açãoad = 'enderecos.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  renderTable();
+</script>
+{% endblock %}

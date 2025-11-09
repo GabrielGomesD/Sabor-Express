@@ -1,0 +1,16 @@
+id,nome,endereco,latitude,longitude,selecionado
+1,Cliente A,Rua Augusta 1500,-23.556654,-46.661927,true
+2,Cliente B,Av. Paulista 900,-23.567255,-46.648346,true
+3,Cliente C,Rua Frei Caneca 558,-23.555243,-46.652742,true
+4,Cliente D,Rua da Consolação 247,-23.548959,-46.646529,true
+5,Cliente E,Av. Brigadeiro Luís Antônio 2900,-23.576109,-46.649871,false
+6,Cliente F,Rua Haddock Lobo 595,-23.557682,-46.661041,true
+7,Cliente G,Av. Nove de Julho 3400,-23.575402,-46.668775,false
+8,Cliente H,Rua Oscar Freire 1100,-23.561701,-46.669187,true
+9,Cliente I,Rua Bela Cintra 986,-23.555957,-46.659027,true
+10,Cliente J,Av. Rebouças 3100,-23.567819,-46.677291,false
+11,Cliente K,Rua Pamplona 818,-23.564199,-46.652861,true
+12,Cliente L,Rua Haddock Lobo 347,-23.555881,-46.660216,false
+13,Cliente M,Rua Peixoto Gomide 1333,-23.563063,-46.652412,true
+14,Cliente N,Rua Estados Unidos 1000,-23.563988,-46.671213,true
+15,Cliente O,Av. Brasil 1200,-23.569381,-46.676902,false
