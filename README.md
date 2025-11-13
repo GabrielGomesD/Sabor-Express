@@ -38,7 +38,30 @@ Grafos	networkx	Modelagem da rede de pontos para cálculo de rotas.
 
 ## 🗂️ Estrutura do Projeto
 
-Em desenvolvimento
+Entragas_IA/
+│
+├── README.md
+├── requirements.txt
+│
+├── app/
+│   ├── web.py                 # Servidor Flask e UI web
+│   │
+│   ├── core/
+│   │   ├── geo.py             # Haversine e matriz de distâncias
+│   │   ├── optimizer.py       # Algoritmos NN + 2-OPT
+│   │   ├── data.py            # Manipulação de CSV e template
+│   │
+│   ├── ui/
+│       ├── components.py      # Geração do mapa (Folium) e grafo (Plotly)
+│
+├── data/
+│   └── enderecos.csv          # Exemplo de pontos
+│
+└── .venv/                     # Ambiente virtual
+    ├── Lib/                   # Packages instalados
+    ├── etc/
+    ├── include/
+    ├── pyvenv.cfg
 
 ---
 
